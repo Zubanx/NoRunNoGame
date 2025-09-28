@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RunQuest Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 60px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .logout {
+            color: #666;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s ease;
+        }
+
+        .logout:hover {
+            color: #333;
+        }
+
+        .status-section {
+            margin-bottom: 50px;
+        }
+
+        .status-card {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e9ecef;
+        }
+
+        .status-emoji {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .status-title {
+            font-size: 1.8rem;
+            font-weight: 300;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .status-subtitle {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .allowed {
+            border-left: 4px solid #28a745;
+        }
+
+        .blocked {
+            border-left: 4px solid #dc3545;
+        }
+
+        .progress-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .metric-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            border: 1px solid #e9ecef;
+        }
+
+        .metric-number {
+            font-size: 2.5rem;
+            font-weight: 300;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .metric-label {
+            color: #666;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #28a745, #20c997);
+            border-radius: 4px;
+            transition: width 0.8s ease;
+        }
+
+        .actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .btn {
+            background: none;
+            border: 1px solid #dee2e6;
+            padding: 12px 24px;
+            border-radius: 8px;
+            color: #666;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover {
+            border-color: #333;
+            color: #333;
+        }
+
+        .btn.primary {
+            background: #333;
+            border-color: #333;
+            color: white;
+        }
+
+        .btn.primary:hover {
+            background: #555;
+        }
+
+        @media (max-width: 600px) {
+            .progress-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">RunQuest</div>
+            <a href="#" class="logout" onclick="logout()">Logout</a>
+        </header>
+
+        <section class="status-section">
+            <div class="status-card" id="statusCard">
+                <span class="status-emoji" id="statusEmoji">🔒</span>
+                <h1 class="status-title" id="statusTitle">Steam Blocked</h1>
+                <p class="status-subtitle" id="statusSubtitle">Complete your daily run to unlock gaming</p>
+            </div>
+        </section>
+
+        <section class="progress-section">
+            <div class="metric-card">
+                <div class="metric-number" id="distanceToday">0.0</div>
+                <div class="metric-label">km today</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-number" id="goalDistance">5.0</div>
+                <div class="metric-label">km goal</div>
+            </div>
+        </section>
+
+        <div class="metric-card">
+            <div class="metric-label" style="margin-bottom: 10px;">Progress</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+            <div style="color: #666; font-size: 0.9rem; margin-top: 10px;">
+                <span id="progressText">0% complete</span>
+            </div>
+        </div>
+
+        <div style="margin-top: 40px;">
+            <div class="actions">
+                <button class="btn" onclick="refreshStatus()">Refresh Status</button>
+                <button class="btn primary" onclick="openStrava()">View on Strava</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>
